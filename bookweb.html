@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AKSHAR — Premium Book Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Hind+Siliguri:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --black: #080806;
+      --white: #f5f3ee;
+      --gold: #c9a84c;
+      --gold2: #e8c97a;
+      --grey: #7a7870;
+      --dark: #121210;
+      --dark2: #1a1a18;
+      --border: rgba(201,168,76,0.22);
+      --ink: #2a2820;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Hind Siliguri', sans-serif;
+      font-weight: 400;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      background: rgba(8,8,6,0.96);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .logo span { color: var(--gold); }
+    .logo-sub {
+      font-family: 'Hind Siliguri', sans-serif;
+      font-size: 8px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-transform: uppercase;
+      display: block;
+      margin-top: 1px;
+    }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      color: rgba(245,243,238,0.55);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-right { display: flex; gap: 20px; align-items: center; }
+    .nav-right a { color: rgba(245,243,238,0.55); text-decoration: none; font-size: 15px; transition: color 0.3s; }
+    .nav-right a:hover { color: var(--gold); }
+    .cart-wrap { position: relative; }
+    .cart-dot {
+      position: absolute; top: -6px; right: -8px;
+      background: var(--gold); color: var(--black);
+      font-size: 8px; font-weight: 700;
+      width: 15px; height: 15px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* HERO */
+    .hero {
+      height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(105deg, rgba(8,8,6,0.95) 45%, rgba(8,8,6,0.25) 100%),
+        url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1800&q=90') center/cover no-repeat;
+      animation: hzoom 20s ease-in-out infinite alternate;
+    }
+    @keyframes hzoom { from{transform:scale(1);} to{transform:scale(1.04);} }
+
+    /* floating dust particles */
+    .hero::after {
+      content:'';
+      position:absolute; inset:0;
+      background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(201,168,76,0.04) 0%, transparent 70%);
+      pointer-events:none;
+    }
+
+    .hero-content {
+      position: relative;
+      padding: 0 80px;
+      max-width: 720px;
+      animation: fadeUp 1s ease both;
+    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(32px);} to{opacity:1;transform:translateY(0);} }
+
+    .pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+      color: var(--gold); border: 1px solid var(--border);
+      padding: 7px 18px; margin-bottom: 28px;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .pill::before { content:''; width:4px; height:4px; background:var(--gold); border-radius:50%; }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(46px, 6vw, 82px);
+      font-weight: 900; line-height: 1.06; margin-bottom: 24px;
+      letter-spacing: -1px;
+    }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 18px; color: rgba(245,243,238,0.5);
+      border-left: 2px solid var(--gold);
+      padding-left: 18px; margin-bottom: 44px; line-height: 1.7;
+      max-width: 400px;
+    }
+    .btn {
+      display: inline-block; background: var(--gold); color: var(--black);
+      font-size: 10px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+      padding: 16px 44px; text-decoration: none; transition: background 0.3s;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .btn:hover { background: var(--gold2); }
+    .btn-ghost {
+      display: inline-block; border: 1px solid var(--border); color: rgba(245,243,238,0.6);
+      font-size: 10px; font-weight: 500; letter-spacing: 2.5px; text-transform: uppercase;
+      padding: 15px 36px; text-decoration: none; margin-left: 16px; transition: all 0.3s;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* TICKER */
+    .ticker { background: var(--gold); padding: 11px 0; overflow: hidden; }
+    .ticker-track {
+      display: flex; gap: 48px; width: max-content;
+      animation: ticker 26s linear infinite;
+    }
+    @keyframes ticker { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+    .ticker-track span {
+      font-size: 9px; font-weight: 600; letter-spacing: 2.5px;
+      text-transform: uppercase; color: var(--black); white-space: nowrap;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .ticker-track .sep { opacity: 0.3; }
+
+    /* SECTIONS */
+    .sec { padding: 100px 80px; }
+    .sec-label {
+      font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 12px;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .sec-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 3.5vw, 50px);
+      font-weight: 700; line-height: 1.15; margin-bottom: 52px;
+    }
+    .sec-title em { font-style: italic; color: var(--gold); }
+
+    /* BOOKS GRID */
+    .products-top { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 48px; }
+    .products-top .sec-title { margin-bottom: 0; }
+    .filter-row { display:flex; gap:4px; }
+    .ftab {
+      font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 9px 18px; border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(245,243,238,0.4); cursor: pointer; background: transparent; transition: all 0.25s;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .ftab.on, .ftab:hover { background: var(--gold); color: var(--black); border-color: var(--gold); }
+
+    .pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+    /* BOOK CARD — portrait ratio, spine visible */
+    .pcard { background: var(--dark); overflow: hidden; position: relative; transition: transform 0.4s; }
+    .pcard:hover { transform: translateY(-4px); }
+
+    .pimg {
+      position: relative; overflow: hidden;
+      height: 440px;
+      background: var(--dark2);
+    }
+    .pimg img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block; transition: transform 0.7s ease;
+    }
+    .pcard:hover .pimg img { transform: scale(1.05); }
+
+    /* Book spine effect */
+    .pimg::before {
+      content:'';
+      position:absolute; left:0; top:0; bottom:0; width:10px;
+      background: linear-gradient(to right, rgba(0,0,0,0.55), transparent);
+      z-index:2;
+    }
+    /* Bottom shadow on image */
+    .pimg::after {
+      content:'';
+      position:absolute; bottom:0; left:0; right:0; height:80px;
+      background: linear-gradient(to top, var(--dark), transparent);
+      z-index:2;
+    }
+
+    .pbadge {
+      position: absolute; top: 14px; right: 14px; z-index: 4;
+      font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 5px 11px; background: var(--gold); color: var(--black);
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .pbadge.new-b { background: var(--white); color: var(--black); }
+    .pbadge.exc-b { background: var(--ink); color: var(--gold); border: 1px solid var(--gold); }
+
+    .poverlay {
+      position: absolute; inset: 0; background: rgba(8,8,6,0.65);
+      opacity: 0; transition: opacity 0.35s;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 22px; gap: 8px; z-index:5;
+    }
+    .pcard:hover .poverlay { opacity: 1; }
+    .oadd {
+      display: block; background: var(--gold); color: var(--black);
+      text-align: center; font-size: 9px; font-weight: 600;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 13px; text-decoration: none; transition: background 0.3s;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .oadd:hover { background: var(--gold2); }
+    .owish {
+      display: block; border: 1px solid rgba(255,255,255,0.35); color: var(--white);
+      text-align: center; font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
+      padding: 12px; text-decoration: none; transition: all 0.3s;
+      font-family: 'Hind Siliguri', sans-serif;
+    }
+    .owish:hover { border-color: var(--gold); color: var(--gold); }
+
+    .pinfo { padding: 20px 20px 24px; }
+    .pbrand { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; font-family:'Hind Siliguri',sans-serif; }
+    .pname { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--white); margin-bottom: 5px; line-height: 1.3; }
+    .pauthor { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 13px; color: var(--grey); margin-bottom: 14px; }
+    .pmeta { display: flex; justify-content: space-between; align-items: center; }
+    .pprice { font-size: 15px; font-weight: 600; color: var(--white); font-family:'Hind Siliguri',sans-serif; }
+    .pprice del { font-size: 11px; color: var(--grey); font-weight: 300; margin-right: 5px; }
+    .prating { display:flex; gap:2px; }
+    .prating span { font-size:10px; color:var(--gold); }
+
+    /* FEATURED BANNER */
+    .banner-sec { padding: 0 80px 100px; }
+    .banner {
+      position: relative; height: 520px; overflow: hidden;
+      display: flex; align-items: center;
+    }
+    .banner-bg {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(90deg, rgba(8,8,6,0.96) 40%, rgba(8,8,6,0.15) 100%),
+        url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1400&q=90') center/cover no-repeat;
+    }
+    .banner-content { position: relative; padding: 60px; max-width: 540px; }
+    .banner-content .sec-label { margin-bottom: 16px; }
+    .banner-content h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px,3.5vw,46px); font-weight:700; line-height:1.15; margin-bottom:16px;
+    }
+    .banner-content p { font-size:13px; color:rgba(245,243,238,0.55); line-height:1.9; margin-bottom:36px; font-family:'Hind Siliguri',sans-serif; }
+    .stats-row { display:flex; gap:44px; margin-bottom:40px; }
+    .stat-n { font-family:'Playfair Display',serif; font-size:34px; font-weight:700; color:var(--gold); }
+    .stat-l { font-size:8px; letter-spacing:2px; text-transform:uppercase; color:rgba(245,243,238,0.4); margin-top:4px; font-family:'Hind Siliguri',sans-serif; }
+
+    /* REVIEWS */
+    .reviews-sec { background: var(--dark2); padding: 100px 80px; }
+    .rgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+    .rcard {
+      background: var(--dark); border: 1px solid var(--border);
+      padding: 36px; position: relative;
+    }
+    .rcard::before {
+      content:'\201C'; position:absolute; top:16px; right:22px;
+      font-family:'Playfair Display',serif; font-size:80px;
+      color:var(--gold); opacity:0.1; line-height:1;
+    }
+    .stars { display:flex; gap:3px; margin-bottom:18px; }
+    .star { color:var(--gold); font-size:11px; }
+    .star-e { color:rgba(201,168,76,0.2); font-size:11px; }
+    .rtext {
+      font-family:'Cormorant Garamond',serif; font-style:italic;
+      font-size:15px; line-height:1.85; color:rgba(245,243,238,0.72); margin-bottom:24px;
+    }
+    .rauthor { display:flex; align-items:center; gap:12px; }
+    .ravatar { width:42px; height:42px; border-radius:50%; object-fit:cover; border:2px solid var(--gold); }
+    .rname { font-size:12px; font-weight:600; letter-spacing:0.5px; }
+    .rtag { font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); margin-top:2px; font-family:'Hind Siliguri',sans-serif; }
+    .rprod {
+      font-size:9px; letter-spacing:1.5px; text-transform:uppercase;
+      color:rgba(245,243,238,0.28); border:1px solid rgba(255,255,255,0.06);
+      display:inline-block; padding:4px 10px; margin-top:16px; font-family:'Hind Siliguri',sans-serif;
+    }
+
+    /* NEWSLETTER */
+    .nl-sec { padding:100px 80px; text-align:center; }
+    .nl-sec .sec-label { display:block; }
+    .nl-sec .sec-title { max-width:480px; margin:0 auto 14px; }
+    .nl-sec p { font-size:13px; color:rgba(245,243,238,0.45); margin-bottom:44px; font-family:'Hind Siliguri',sans-serif; }
+    .nl-form { display:flex; max-width:460px; margin:0 auto; }
+    .nl-input {
+      flex:1; background:var(--dark); border:1px solid var(--border);
+      border-right:none; color:var(--white);
+      padding:16px 22px; font-family:'Hind Siliguri',sans-serif; font-size:11px; outline:none;
+    }
+    .nl-input::placeholder { color:var(--grey); }
+    .nl-btn {
+      background:var(--gold); color:var(--black); border:none;
+      padding:16px 32px; font-family:'Hind Siliguri',sans-serif;
+      font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+      cursor:pointer; transition:background 0.3s;
+    }
+    .nl-btn:hover { background:var(--gold2); }
+
+    /* FOOTER */
+    footer { background:#050503; border-top:1px solid rgba(201,168,76,0.1); padding:70px 80px 36px; }
+    .fgrid { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:50px; margin-bottom:56px; }
+    .flogo { font-family:'Playfair Display',serif; font-size:20px; font-weight:900; letter-spacing:5px; color:var(--white); text-decoration:none; display:block; margin-bottom:14px; }
+    .flogo span { color:var(--gold); }
+    .fdesc { font-size:12px; color:rgba(245,243,238,0.35); line-height:1.95; max-width:260px; font-family:'Hind Siliguri',sans-serif; }
+    .fsocial { display:flex; gap:9px; margin-top:22px; }
+    .fsoc { width:34px; height:34px; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; color:rgba(245,243,238,0.4); font-size:11px; text-decoration:none; transition:all 0.3s; }
+    .fsoc:hover { border-color:var(--gold); color:var(--gold); }
+    .fcol h4 { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:20px; font-family:'Hind Siliguri',sans-serif; }
+    .fcol ul { list-style:none; }
+    .fcol li { margin-bottom:10px; }
+    .fcol a { color:rgba(245,243,238,0.35); text-decoration:none; font-size:12px; transition:color 0.3s; font-family:'Hind Siliguri',sans-serif; }
+    .fcol a:hover { color:var(--gold); }
+    .fbot { display:flex; justify-content:space-between; align-items:center; padding-top:26px; border-top:1px solid rgba(255,255,255,0.04); }
+    .fcopy { font-size:11px; color:rgba(245,243,238,0.18); font-family:'Hind Siliguri',sans-serif; }
+    .fpay { display:flex; gap:10px; }
+    .fpay span { font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:rgba(245,243,238,0.2); border:1px solid rgba(255,255,255,0.06); padding:4px 10px; font-family:'Hind Siliguri',sans-serif; }
+
+    /* RESPONSIVE */
+    @media (max-width:1024px) {
+      nav, .sec, .banner-sec, .reviews-sec, .nl-sec, footer { padding-left:40px; padding-right:40px; }
+      .pgrid { grid-template-columns:repeat(2,1fr); }
+      .rgrid { grid-template-columns:repeat(2,1fr); }
+      .fgrid { grid-template-columns:1fr 1fr; }
+      .hero-content { padding:0 40px; }
+    }
+    @media (max-width:680px) {
+      nav { padding:16px 20px; }
+      .nav-links { display:none; }
+      .sec, .nl-sec { padding:64px 20px; }
+      .reviews-sec { padding:64px 20px; }
+      footer { padding:60px 20px 28px; }
+      .hero-content { padding:0 24px; }
+      .pgrid { grid-template-columns:1fr; }
+      .rgrid { grid-template-columns:1fr; }
+      .fgrid { grid-template-columns:1fr; }
+      .products-top { flex-direction:column; align-items:flex-start; gap:20px; }
+      .nl-form { flex-direction:column; }
+      .nl-input { border-right:1px solid var(--border); border-bottom:none; }
+      .banner-sec { padding:0 20px 64px; }
+      .banner-content { padding:36px 24px; }
+      .stats-row { gap:24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">AK<span>SH</span>AR<span class="logo-sub">Premium Books</span></a>
+  <ul class="nav-links">
+    <li><a href="#books">Collection</a></li>
+    <li><a href="#featured">Featured</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="#">🔍</a>
+    <a href="#" class="cart-wrap">🛒<span class="cart-dot">3</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <span class="pill">New Arrivals — Autumn 2026</span>
+    <h1>Every Book, a New <em>Universe.</em></h1>
+    <p class="hero-quote">"A reader lives a thousand lives before he dies. The man who never reads lives only one."</p>
+    <a href="#books" class="btn">Browse Collection</a>
+    <a href="#featured" class="btn-ghost">Featured Picks</a>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span>Free Delivery Over ৳500</span><span class="sep"> ✦ </span>
+    <span>Authentic Editions</span><span class="sep"> ✦ </span>
+    <span>30-Day Returns</span><span class="sep"> ✦ </span>
+    <span>Rare Titles Available</span><span class="sep"> ✦ </span>
+    <span>Gift Wrapping Free</span><span class="sep"> ✦ </span>
+    <span>Free Delivery Over ৳500</span><span class="sep"> ✦ </span>
+    <span>Authentic Editions</span><span class="sep"> ✦ </span>
+    <span>30-Day Returns</span><span class="sep"> ✦ </span>
+    <span>Rare Titles Available</span><span class="sep"> ✦ </span>
+    <span>Gift Wrapping Free</span><span class="sep"> ✦ </span>
+  </div>
+</div>
+
+<!-- BOOKS -->
+<section class="sec" id="books">
+  <div class="products-top">
+    <div>
+      <div class="sec-label">Our Collection</div>
+      <h2 class="sec-title">Curated for the <em>Curious</em></h2>
+    </div>
+    <div class="filter-row">
+      <button class="ftab on">All</button>
+      <button class="ftab">Bengali</button>
+      <button class="ftab">Fiction</button>
+      <button class="ftab">Self-Help</button>
+    </div>
+  </div>
+
+  <div class="pgrid">
+
+    <!-- 1 -->
+    <div class="pcard">
+      <div class="pimg">
+        <span class="pbadge new-b">New</span>
+        <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=600&q=90&fit=crop&crop=center" alt="Book"/>
+        <div class="poverlay">
+          <a href="#" class="oadd">Add to Cart</a>
+          <a href="#" class="owish">♡ Wishlist</a>
+        </div>
+      </div>
+      <div class="pinfo">
+        <div class="pbrand">Bengali Classic</div>
+        <div class="pname">শেষের কবিতা</div>
+        <div class="pauthor">রবীন্দ্রনাথ ঠাকুর</div>
+        <div class="pmeta">
+          <div class="pprice">৳380</div>
+          <div class="prating"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="pcard">
+      <div class="pimg">
+        <span class="pbadge new-b">New</span>
+        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=600&q=90&fit=crop&crop=center" alt="Book"/>
+        <div class="poverlay">
+          <a href="#" class="oadd">Add to Cart</a>
+          <a href="#" class="owish">♡ Wishlist</a>
+        </div>
+      </div>
+      <div class="pinfo">
+        <div class="pbrand">Modern Fiction</div>
+        <div class="pname">পদ্মা নদীর মাঝি</div>
+        <div class="pauthor">মানিক বন্দ্যোপাধ্যায়</div>
+        <div class="pmeta">
+          <div class="pprice">৳420</div>
+          <div class="prating"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="pcard">
+      <div class="pimg">
+        <span class="pbadge">Sale</span>
+        <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=600&q=90&fit=crop&crop=center" alt="Book"/>
+        <div class="poverlay">
+          <a href="#" class="oadd">Add to Cart</a>
+          <a href="#" class="owish">♡ Wishlist</a>
+        </div>
+      </div>
+      <div class="pinfo">
+        <div class="pbrand">Philosophy</div>
+        <div class="pname">The Alchemist</div>
+        <div class="pauthor">Paulo Coelho</div>
+        <div class="pmeta">
+          <div class="pprice"><del>৳600</del> ৳450</div>
+          <div class="prating"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="pcard">
+      <div class="pimg">
+        <img src="https://images.unsplash.com/photo-1629992101753-56d196c8aabb?w=600&q=90&fit=crop&crop=center" alt="Book"/>
+        <div class="poverlay">
+          <a href="#" class="oadd">Add to Cart</a>
+          <a href="#" class="owish">♡ Wishlist</a>
+        </div>
+      </div>
+      <div class="pinfo">
+        <div class="pbrand">Self-Help</div>
+        <div class="pname">Atomic Habits</div>
+        <div class="pauthor">James Clear</div>
+        <div class="pmeta">
+          <div class="pprice">৳750</div>
+          <div class="prating"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="pcard">
+      <div class="pimg">
+        <span class="pbadge new-b">New</span>
+        <img src="https://images.unsplash.com/photo-1476275466078-4007374efbbe?w=600&q=90&fit=crop&crop=center" alt="Book"/>
+        <div class="poverlay">
+          <a href="#" class="oadd">Add to Cart</a>
+          <a href="#" class="owish">♡ Wishlist</a>
+        </div>
+      </div>
+      <div class="pinfo">
+        <div class="pbrand">Bengali Poetry</div>
+        <div class="pname">গীতাঞ্জলি</div>
+        <div class="pauthor">রবীন্দ্রনাথ ঠাকুর</div>
+        <div class="pmeta">
+          <div class="pprice">৳350</div>
+          <div class="prating"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="pcard">
+      <div class="pimg">
+        <span class="pbadge">Sale</span>
+        <img src="https://images.unsplash.com/photo-1495640452828-3df6795cf69b?w=600&q=90&fit=crop&crop=center" alt="Book"/>
+        <div class="poverlay">
+          <a href="#" class="oadd">Add to Cart</a>
+          <a href="#" class="owish">♡ Wishlist</a>
+        </div>
+      </div>
+      <div class="pinfo">
+        <div class="pbrand">World Classic</div>
+        <div class="pname">Crime & Punishment</div>
+        <div class="pauthor">Fyodor Dostoevsky</div>
+        <div class="pmeta">
+          <div class="pprice"><del>৳900</del> ৳680</div>
+          <div class="prating"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="pcard">
+      <div class="pimg">
+        <span class="pbadge exc-b">Exclusive</span>
+        <img src="https://images.unsplash.com/photo-1533669955142-6a73332af4db?w=600&q=90&fit=crop&crop=center" alt="Book"/>
+        <div class="poverlay">
+          <a href="#" class="oadd">Add to Cart</a>
+          <a href="#" class="owish">♡ Wishlist</a>
+        </div>
+      </div>
+      <div class="pinfo">
+        <div class="pbrand">Science</div>
+        <div class="pname">A Brief History of Time</div>
+        <div class="pauthor">Stephen Hawking</div>
+        <div class="pmeta">
+          <div class="pprice">৳820</div>
+          <div class="prating"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="pcard">
+      <div class="pimg">
+        <span class="pbadge new-b">New</span>
+        <img src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=600&q=90&fit=crop&crop=center" alt="Book"/>
+        <div class="poverlay">
+          <a href="#" class="oadd">Add to Cart</a>
+          <a href="#" class="owish">♡ Wishlist</a>
+        </div>
+      </div>
+      <div class="pinfo">
+        <div class="pbrand">Bengali Fiction</div>
+        <div class="pname">দেবদাস</div>
+        <div class="pauthor">শরৎচন্দ্র চট্টোপাধ্যায়</div>
+        <div class="pmeta">
+          <div class="pprice">৳290</div>
+          <div class="prating"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="pcard">
+      <div class="pimg">
+        <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=600&q=90&fit=crop&crop=center" alt="Book"/>
+        <div class="poverlay">
+          <a href="#" class="oadd">Add to Cart</a>
+          <a href="#" class="owish">♡ Wishlist</a>
+        </div>
+      </div>
+      <div class="pinfo">
+        <div class="pbrand">Mystery</div>
+        <div class="pname">The Name of the Rose</div>
+        <div class="pauthor">Umberto Eco</div>
+        <div class="pmeta">
+          <div class="pprice">৳720</div>
+          <div class="prating"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURED BANNER -->
+<section class="banner-sec" id="featured">
+  <div class="banner">
+    <div class="banner-bg"></div>
+    <div class="banner-content">
+      <div class="sec-label">Editor's Pick — 2026</div>
+      <h2>Stories That <em style="font-style:italic;color:var(--gold)">Change</em> You</h2>
+      <p>Our curators have handpicked titles that go beyond entertainment — books that shift your perspective, expand your world, and stay with you long after the last page.</p>
+      <div class="stats-row">
+        <div><div class="stat-n">5,000+</div><div class="stat-l">Titles Available</div></div>
+        <div><div class="stat-n">98%</div><div class="stat-l">Authentic Editions</div></div>
+        <div><div class="stat-n">12K+</div><div class="stat-l">Happy Readers</div></div>
+      </div>
+      <a href="#books" class="btn">Explore All Books</a>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-sec" id="reviews">
+  <div class="sec-label">Reader Reviews</div>
+  <h2 class="sec-title">What Our <em>Readers</em> Say</h2>
+  <div class="rgrid">
+
+    <div class="rcard">
+      <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <p class="rtext">গীতাঞ্জলির যে সংস্করণটি পেলাম সেটি অসাধারণ। পেপার কোয়ালিটি চমৎকার, প্রিন্ট স্পষ্ট। মনে হলো বইটা আমার জন্যই লেখা।</p>
+      <div class="rauthor">
+        <img class="ravatar" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80" alt=""/>
+        <div><div class="rname">আরিয়ান চৌধুরী</div><div class="rtag">Verified Buyer</div></div>
+      </div>
+      <span class="rprod">গীতাঞ্জলি</span>
+    </div>
+
+    <div class="rcard">
+      <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <p class="rtext">Atomic Habits changed my daily routine completely. Delivery was fast, packaging was excellent. Will definitely order more books from AKSHAR.</p>
+      <div class="rauthor">
+        <img class="ravatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt=""/>
+        <div><div class="rname">Tariq Rahman</div><div class="rtag">Verified Buyer</div></div>
+      </div>
+      <span class="rprod">Atomic Habits</span>
+    </div>
+
+    <div class="rcard">
+      <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star-e">★</span></div>
+      <p class="rtext">পদ্মা নদীর মাঝি পড়ে মনটা ভারী হয়ে গেল। এই বইয়ের সংস্করণটা সত্যিই সুন্দর। দ্রুত ডেলিভারিতে খুশি হয়েছি।</p>
+      <div class="rauthor">
+        <img class="ravatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80" alt=""/>
+        <div><div class="rname">রোহান সিকদার</div><div class="rtag">Verified Buyer</div></div>
+      </div>
+      <span class="rprod">পদ্মা নদীর মাঝি</span>
+    </div>
+
+    <div class="rcard">
+      <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <p class="rtext">The Alchemist was beautifully packaged — felt like a gift. Price is unbeatable. This is now my go-to bookstore for everything I read. Highly recommend to all book lovers.</p>
+      <div class="rauthor">
+        <img class="ravatar" src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=100&q=80" alt=""/>
+        <div><div class="rname">Zaid Hossain</div><div class="rtag">Loyal Customer</div></div>
+      </div>
+      <span class="rprod">The Alchemist</span>
+    </div>
+
+    <div class="rcard">
+      <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <p class="rtext">শেষের কবিতা পড়লাম তিনবার। প্রতিবার নতুন কিছু পাই। AKSHAR-এর কোয়ালিটি সত্যিই প্রিমিয়াম। এখানেই কিনব সবসময়।</p>
+      <div class="rauthor">
+        <img class="ravatar" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80" alt=""/>
+        <div><div class="rname">ইমরান ফারুকি</div><div class="rtag">Repeat Buyer</div></div>
+      </div>
+      <span class="rprod">শেষের কবিতা</span>
+    </div>
+
+    <div class="rcard">
+      <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+      <p class="rtext">Crime & Punishment was a steal at sale price. Dostoevsky's masterpiece in a crisp edition. I gifted it to a friend and she loved it. Outstanding service from AKSHAR.</p>
+      <div class="rauthor">
+        <img class="ravatar" src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&q=80" alt=""/>
+        <div><div class="rname">Nabil Karim</div><div class="rtag">Verified Buyer</div></div>
+      </div>
+      <span class="rprod">Crime & Punishment</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="nl-sec" id="contact">
+  <div class="sec-label">Stay Updated</div>
+  <h2 class="sec-title">Join the <em>Reading Circle</em></h2>
+  <p>New arrivals, exclusive discounts, and curated reading lists — straight to your inbox.</p>
+  <div class="nl-form">
+    <input class="nl-input" type="email" placeholder="Enter your email address"/>
+    <button class="nl-btn">Subscribe</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fgrid">
+    <div>
+      <a href="#" class="flogo">AK<span>SH</span>AR</a>
+      <p class="fdesc">Premium books for those who live to read. Every title is chosen with care, delivered with love.</p>
+      <div class="fsocial">
+        <a href="#" class="fsoc">in</a>
+        <a href="#" class="fsoc">ig</a>
+        <a href="#" class="fsoc">fb</a>
+        <a href="#" class="fsoc">yt</a>
+      </div>
+    </div>
+    <div class="fcol">
+      <h4>Browse</h4>
+      <ul>
+        <li><a href="#">New Arrivals</a></li>
+        <li><a href="#">Bengali Classics</a></li>
+        <li><a href="#">World Fiction</a></li>
+        <li><a href="#">Self-Help</a></li>
+        <li><a href="#">Poetry</a></li>
+        <li><a href="#">Children's Books</a></li>
+        <li><a href="#">Sale</a></li>
+      </ul>
+    </div>
+    <div class="fcol">
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">My Orders</a></li>
+        <li><a href="#">Shipping Info</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">Track Order</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">FAQs</a></li>
+      </ul>
+    </div>
+    <div class="fcol">
+      <h4>About</h4>
+      <ul>
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Book Clubs</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Privacy</a></li>
+        <li><a href="#">Terms</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="fbot">
+    <p class="fcopy">© 2026 AKSHAR Premium Books. All rights reserved.</p>
+    <div class="fpay">
+      <span>bKash</span><span>Nagad</span><span>Visa</span><span>Mastercard</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Filter tabs
+  document.querySelectorAll('.ftab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.ftab').forEach(t => t.classList.remove('on'));
+      tab.classList.add('on');
+    });
+  });
+</script>
+
+</body>
+</html>
